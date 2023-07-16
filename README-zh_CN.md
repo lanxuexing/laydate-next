@@ -33,16 +33,121 @@ yarn add laydate-next
 
 ## 使用方法
 
-```
-<input name="mydate" id="mydate">
 
-var laydate = require("laydate");
- 
-//  init date
-laydate({
+```html
+<input type="text" id="ID-test-laydate">
+<input type="text" class="class-test-laydate" lay-options="{value: '2016-10-14'}">
+<input type="text" class="class-test-laydate" lay-options="{value: '2017-08-21'}">
+
+<script>
+
+// 单个渲染
+laydate.render({
   elem: '#mydate',
   lang: 'en'
 });
+
+// 批量渲染
+laydate.render({
+  elem: '.class-test-laydate'
+});
+
+</script>
+```
+
+:fire:太长;不看
+
+> 除 elem 属性外，其他基础属性也可以直接写在元素的 lay-options="{}" 属性中。
+
+## API
+
+API | 描述
+--- | ---
+`var laydate = layui.laydate` | 获得 `laydate` 模块。
+`laydate.render(options)` | `laydate` 组件渲染，核心方法。
+`laydate.hint(id, opts)` | 在对应的 `laydate` 组件面板上弹出提示层。
+`laydate.getInst(id)` | 获取组件对应的渲染实例。
+`laydate.unbind(id)` | 对目标元素解除当前实例的绑定。
+`laydate.close(id)` | 关闭日期面板。
+`laydate.getEndDate(month, year)` | 获取某月的最后一天。
+
+#### laydate.hint(id, opts)
+- 参数 `id`：组件渲染时定义的 `id` 属性值。
+- 参数 `opts`：该方法支持的属性可选项，详见下表：
+
+| 属性      | 描述                    | 类型    | 默认值 |
+|-----------|-------------------------|---------|-------|
+| content   | 提示内容                | string  | -     |
+| ms        | 提示层自动消失所需的毫秒数 | number  | 3000  |
+
+```js
+// 渲染
+laydate.render({
+  elem: '', // 绑定元素选择器
+  id: 'test', // 自定义 id
+  // 其他属性 ...
+});
+// 弹出提示
+laydate.hint('test', {
+  content: '提示内容'
+});
+```
+
+#### laydate.getInst(id)
+
+- 参数 id : 组件渲染时定义的 id 属性值
+
+```js
+// 渲染
+laydate.render({
+  elem: '', // 绑定元素选择器
+  id: 'test', // 自定义 id 
+  // 其他属性 …
+});
+// 获取对应的实例
+var inst = laydate.getInst('test');
+console.log(inst); // 实例对象
+```
+
+#### laydate.unbind(id)
+
+- 参数 id : 组件渲染时定义的 id 属性值
+
+```js
+// 渲染
+laydate.render({
+  elem: '', // 绑定元素选择器
+  id: 'test', // 自定义 id 
+  // 其他属性 …
+});
+// 解除对应的实例绑定
+laydate.unbind('test');
+```
+
+#### laydate.close(id)
+
+- 参数 id : 组件渲染时定义的 id 属性值。 若 id 参数不填，则关闭当前打开的日期面板
+
+```js
+// 渲染
+laydate.render({
+  elem: '', // 绑定元素选择器
+  id: 'test', // 自定义 id 
+  // 其他属性 …
+});
+// 关闭对应的日期面板
+laydate.cllose('test');
+```
+
+
+#### laydate.getEndDate(month, year)
+
+- 参数 month : 月份，默认为当前月。
+- 参数 year : 年份，默认为今年。
+
+```js
+var days1 = laydate.getEndDate(10); // 获得 10 月的最后一天为 31 号
+var days2 = laydate.getEndDate(2, 2080); // 获得 2080 年 2 月的最后一天为 29 号
 ```
 
 ## 属性
@@ -76,6 +181,98 @@ laydate({
 | calendar      | 是否显示我国常见的公历节日。当`lang`设置为`en`时无效            | 数组               | -     |
 | mark          | 自定义日期标记。属性可批量设置多个日期标记，前缀`0-`即代表每年，`0-0-`即代表每年每月。例如：`{ '0-10-14': '生日', '0-0-10': '工资' }` | 对象               | -             |
 | holidays      | 用于标注节假日及补班日。值是一个二维数组，`[['2023-1-1','2023-1-2'],['2023-1-28','2023-1-29']]`            | 数组               | -     |
+
+## 回调
+
+- ready
+```js
+laydate.render({
+  elem: '#mydate',
+  ready: function(date){
+    /* 得到初始的日期时间对象，date 参数格式如下：
+      {
+        year: 2017, // 年
+        month: 8, // 月
+        date: 18, // 日 
+        hours: 0, // 时 
+        minutes: 0, // 分 
+        seconds: 0 // 秒
+      }
+    */
+    console.log(date);
+  }
+)}
+```
+
+- change
+```js
+laydate.render({
+  elem: '#mydate',
+  change: function(value, date, endDate){
+    console.log(value); // 日期字符，如： 2017-08-18
+    console.log(date); // 包含年月日时分秒各项值的对象
+    console.log(endDate); // 结束日期时间对象，当设置 range 时才会返回。对象成员同上。
+  }
+)}
+```
+
+- done
+```js
+laydate.render({
+  elem: '#mydate',
+  done: function(value, date, endDate){
+    console.log(value); // 日期字符，如： 2017-08-18
+    console.log(date); // 包含年月日时分秒各项值的对象
+    console.log(endDate); // 结束日期时间对象，当设置 range 时才会返回。对象成员同上。
+  }
+)}
+```
+
+- onConfirm
+```js
+laydate.render({
+  elem: '#mydate',
+  onConfirm: function(value, date, endDate){
+    console.log(value); // 日期字符，如： 2017-08-18
+    console.log(date); // 包含年月日时分秒各项值的对象
+    console.log(endDate); // 结束日期时间对象，当设置 range 时才会返回。对象成员同上。
+  }
+)}
+```
+
+- onNow
+```js
+laydate.render({
+  elem: '#mydate',
+  onNow: function(value, date, endDate){
+    console.log(value); // 日期字符，如： 2017-08-18
+    console.log(date); // 包含年月日时分秒各项值的对象
+    console.log(endDate); // 结束日期时间对象，当设置 range 时才会返回。对象成员同上。
+  }
+)}
+```
+
+- onClear
+```js
+laydate.render({
+  elem: '#mydate',
+  onClear: function(value, date, endDate){
+    console.log(value); // 日期字符，如： 2017-08-18
+    console.log(date); // 包含年月日时分秒各项值的对象
+    console.log(endDate); // 结束日期时间对象，当设置 range 时才会返回。对象成员同上。
+  }
+)}
+```
+
+- close
+```js
+laydate.render({
+  elem: '#mydate',
+  close: function(){
+    // 你的逻辑
+  }
+)}
+```
 
 ## 演示
 
