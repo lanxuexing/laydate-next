@@ -1,13 +1,13 @@
 {
   "name": "laydate-next",
-  "version": "5.5.0",
+  "version": "5.5.1",
   "description": "Date & Time Picker - Simplify date and time selection",
   "main": "laydate.js",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "gulp",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
   "repository": {
     "type": "https",

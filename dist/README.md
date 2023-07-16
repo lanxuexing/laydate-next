@@ -33,16 +33,120 @@ yarn add laydate-next
 
 ## Usage
 
-```
-<input name="mydate" id="mydate">
+```html
+<input type="text" id="ID-test-laydate">
+<input type="text" class="class-test-laydate" lay-options="{value: '2016-10-14'}">
+<input type="text" class="class-test-laydate" lay-options="{value: '2017-08-21'}">
 
-var laydate = require("laydate");
- 
-//  init date
-laydate({
+<script>
+
+// Single Render
+laydate.render({
   elem: '#mydate',
   lang: 'en'
 });
+
+// Batch Render
+laydate.render({
+  elem: '.class-test-laydate'
+});
+
+</script>
+```
+
+:fire:TL;DR
+
+> Apart from the elem attribute, other basic attributes can also be directly written in the lay-options="{}" attribute of the element.
+
+## API
+
+API | Description
+--- | ---
+`var laydate = layui.laydate` | Get the `laydate` module.
+`laydate.render(options)` | Render the `laydate` component, core method.
+`laydate.hint(id, opts)` | Pop up a hint layer on the corresponding `laydate` component panel.
+`laydate.getInst(id)` | Get the rendering instance corresponding to the component.
+`laydate.unbind(id)` | Unbind the current instance from the target element.
+`laydate.close(id)` | Close the date panel.
+`laydate.getEndDate(month, year)` | Get the last day of a specific month.
+
+#### laydate.hint(id, opts)
+
+- Parameter `id`: The value of the `id` attribute defined when rendering the component.
+- Parameter `opts`: Optional attributes supported by this method, as listed in the table below:
+
+| Attribute | Description                    | Type   | Default Value |
+|-----------|--------------------------------|--------|---------------|
+| content   | The content of the hint         | string | -             |
+| ms        | The number of milliseconds for the hint layer to automatically disappear | number | 3000          |
+
+```js
+// Render
+laydate.render({
+  elem: '', // Element selector to bind
+  id: 'test', // Custom ID
+  // Other attributes ...
+});
+// Show hint
+laydate.hint('test', {
+  content: 'Hint content'
+});
+```
+
+#### laydate.getInst(id)
+
+- Parameter `id`: The value of the `id` attribute defined when rendering the component.
+
+```js
+// Render
+laydate.render({
+  elem: '', // Element selector to bind
+  id: 'test', // Custom ID
+  // Other attributes ...
+});
+// Get the corresponding instance
+var inst = laydate.getInst('test');
+console.log(inst); // Instance object
+```
+
+#### laydate.unbind(id)
+
+- Parameter id: The value of the id attribute defined when rendering the component.
+
+```js
+// Render
+laydate.render({
+  elem: '', // Element selector to bind
+  id: 'test', // Custom ID
+  // Other attributes ...
+});
+// Unbind the corresponding instance
+laydate.unbind('test');
+```
+
+#### laydate.close(id)
+
+- Parameter id: The value of the id attribute defined when rendering the component. If the id parameter is not provided, it will close the currently open date panel.
+
+```js
+// Render
+laydate.render({
+  elem: '', // Element selector to bind
+  id: 'test', // Custom ID
+  // Other attributes ...
+});
+// Close the corresponding date panel
+laydate.close('test');
+```
+
+#### laydate.getEndDate(month, year)
+
+- Parameter month: The month (default: current month).
+- Parameter year: The year (default: current year).
+
+```js
+var days1 = laydate.getEndDate(10); // Gets the last day of October as 31
+var days2 = laydate.getEndDate(2, 2080); // Gets the last day of February 2080 as 29
 ```
 
 ## Props
@@ -75,6 +179,98 @@ laydate({
 | theme         | Theme, built-in themes: `molv`, `grid`, `circle` or custom theme color `#FF5722` or `['grid', '#FF5722']`                     | string/array             | -             |
 | mark          | CustomDateMarks, Allows for custom date marks. This property can be used to set multiple date marks in bulk. The prefix "0-" represents every year, and "0-0-" represents every year and month. `{ '0-10-14': 'birthday', '0-0-10': 'Salary' }`                    | object             | -            |
 | holidays      | HolidayMarks, The value is a two-dimensional array: `[['2023-1-1','2023-1-2'],['2023-1-28','2023-1-29']]`               | array             | -     |
+
+## Callback
+
+- ready
+```js
+laydate.render({
+  elem: '#mydate',
+  ready: function(date){
+  /* Get the initial date and time object. The format of the date parameter is as follows:
+    {
+      year: 2017, // Year
+      month: 8, // Month
+      date: 18, // Day
+      hours: 0, // Hour
+      minutes: 0, // Minute
+      seconds: 0 // Second
+    }
+  */
+  console.log(date);
+}
+)}
+```
+
+- change
+```js
+laydate.render({
+  elem: '#mydate',
+  change: function(value, date, endDate){
+    console.log(value); // Date string, e.g., "2017-08-18"
+    console.log(date); // Object containing values for year, month, day, hour, minute, and second
+    console.log(endDate); // End date and time object, only returned when using range. The object members are the same as above.
+  }
+)}
+```
+
+- done
+```js
+laydate.render({
+  elem: '#mydate',
+  done: function(value, date, endDate){
+    console.log(value); // Date string, e.g., "2017-08-18"
+    console.log(date); // Object containing values for year, month, day, hour, minute, and second
+    console.log(endDate); // End date and time object, only returned when using range. The object members are the same as above.
+  }
+)}
+```
+
+- confirm
+```js
+laydate.render({
+  elem: '#mydate',
+  confirm: function(value, date, endDate){
+    console.log(value); // Date string, e.g., "2017-08-18"
+    console.log(date); // Object containing values for year, month, day, hour, minute, and second
+    console.log(endDate); // End date and time object, only returned when using range. The object members are the same as above.
+  }
+)}
+```
+
+- onNow
+```js
+laydate.render({
+  elem: '#mydate',
+  onNow: function(value, date, endDate){
+    console.log(value); // Date string, e.g., "2017-08-18"
+    console.log(date); // Object containing values for year, month, day, hour, minute, and second
+    console.log(endDate); // End date and time object, only returned when using range. The object members are the same as above.
+  }
+)}
+```
+
+- onClear
+```js
+laydate.render({
+  elem: '#mydate',
+  onClear: function(value, date, endDate){
+    console.log(value); // Date string, e.g., "2017-08-18"
+    console.log(date); // Object containing values for year, month, day, hour, minute, and second
+    console.log(endDate); // End date and time object, only returned when using range. The object members are the same as above.
+  }
+)}
+```
+
+- close
+```js
+laydate.render({
+  elem: '#mydate',
+  close: function(){
+    // logic
+  }
+)}
+```
 
 # Demo
 
