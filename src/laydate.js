@@ -2214,7 +2214,6 @@
     if(layui.type(options.holidays) !== 'array') return that;
 
     var isEquals = function(ymdStr1, ymdStr2){
-      console.log('🔥🔥🔥🔥', ymdStr1, ymdStr2);
       var ymd1 = (ymdStr1 || '').split('-');
       var ymd2 = (ymdStr2 || '').split('-');
 
