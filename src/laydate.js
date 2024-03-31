@@ -3317,9 +3317,9 @@
     return that;
   };
   
-  //初始执行
+  // 初始执行
   ready.run = function(lay){
-    //绑定关闭控件事件
+    // 绑定关闭控件事件
     lay(document).on('mousedown', function(e){
       if(!laydate.thisId) return;
       var that = thisModule.getThis(laydate.thisId);
@@ -3330,7 +3330,8 @@
       if(
         e.target === options.elem[0] || 
         e.target === options.eventElem[0] ||
-        e.target === lay(options.closeStop)[0]
+        e.target === lay(options.closeStop)[0] ||
+        (options.elem[0] && options.elem[0].contains(e.target))
       ) return;
       
       that.remove();
