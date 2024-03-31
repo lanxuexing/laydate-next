@@ -2653,7 +2653,8 @@
       if(haveSpan[0]) haveSpan.remove();
       elemHeader[2].appendChild(span);
 
-      lay(ul).find('ol').each(function(i){
+      var olElem = lay(ul).find('ol');
+      olElem.each(function(i){
         var ol = this;
         //选择时分秒
         lay(ol).find('li').on('click', function(){
@@ -2676,6 +2677,12 @@
           that.setBtnStatus();
         });
       });
+
+      if(lay.touchEventsSupported()){
+        olElem.on('touchstart', function(){
+          this.style['overflow-y'] = 'auto';
+        })
+      }
     }
 
     return that;
