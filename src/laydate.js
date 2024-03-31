@@ -2544,7 +2544,7 @@
           that.limit({
             elem: lay(that.footer).find(ELEM_CONFIRM),
             date: that[startEnd],
-            inedx: 0,
+            index: 0,
             time: ['hours', 'minutes', 'seconds']
           });
         }
